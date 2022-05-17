@@ -6,13 +6,13 @@ An indev console for Spin apps.
 
 ## Server breakdown
 
- - A React app is built into the binary
- - The React app reaches out to the server for resources
- - It reads the current directory for Spin app configuration
- - It reads the Spin home directory for log output
- - It proxies requests to the spin app that's running
+- A React app is built into the binary
+- The React app reaches out to the server for resources
+- It reads the current directory for Spin app configuration
+- It reads the Spin home directory for log output
+- It proxies requests to the spin app that's running
 
-![A diagram showing a react app with arrows pointed back and forth with the server it is served from. The server multiplexes to the spin home directory, the current directory, and the spin api](./diagram.svg)
+![A diagram showing a react app with arrows pointed back and forth with the server it is served from. The server multiplexes to the spin home directory, the current directory, and the spin api](./diagram.png)
 
 ## How to use
 
