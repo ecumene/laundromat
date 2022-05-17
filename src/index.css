@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Cutive+Mono&family=Inter:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.bg {
+  padding: 1rem;
+  height: 100vh;
+  background-color: #e5e5f7;
+  opacity: 0.8;
+  background-image:  radial-gradient(#131435 0.9500000000000001px, transparent 0.9500000000000001px), radial-gradient(#131435 0.9500000000000001px, #e5e5f7 0.9500000000000001px);
+  background-size: 38px 38px;
+  background-position: 0 0,19px 19px;
+}
