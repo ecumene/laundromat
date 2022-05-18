@@ -1,19 +1,66 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Editor from "./Editor";
 
 type Props = {
   paths: string[];
 };
 
+const Response = ({ response }: { response: Response }) => {
+  const [text, setText] = useState<string | null>(null);
+  const { headers, status, statusText, url } = response;
+  const isOk = response.ok;
+
+  useEffect(() => {
+    if (!response.bodyUsed) {
+      (async () => {
+        const blob = await response.blob();
+
+        try {
+          const text = await blob?.text();
+          if (text[0] === "{") {
+            setText(JSON.stringify(JSON.parse(text), null, 2));
+          } else {
+            setText(text ?? null);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      })();
+    }
+  }, []);
+
+  return (
+    <div className="p-4 font-mono rounded-lg bg-slate-900 m-2">
+      <h2 className="text-2xl font-bold">
+        {status} {statusText} {isOk ? "😄" : "😱"}
+      </h2>
+      <div className="text-sm">{url}</div>
+
+      <div className="my-4">
+        {[...headers.entries()].map(([key, value]) => (
+          <div key={key}>
+            {key}: {value}
+          </div>
+        ))}
+      </div>
+      <div>{text}</div>
+    </div>
+  );
+};
+
 const HTTPRepl = ({ paths }: Props) => {
-  const [output, setOutput] = useState("Click the send to try it out!");
+  const [output, setOutput] = useState<Response | null>(null);
   const [input, setInput] = useState("{}");
   const [selectedPath, setSelectedPath] = useState(paths[0]);
   const [method, setMethod] = useState("GET");
+  // todo
+  // const [headers, setHeaders] = useState<Record<string, string>>({});
+  const [path, setPath] = useState<string>("");
 
   const handleSubmit = async () => {
-    setOutput("Loading...");
-    const response = await fetch(`/proxy${selectedPath}`, {
+    setOutput(null);
+    const strippedPath = selectedPath.replace(/\.\.\./, "");
+    const response = await fetch(`/proxy${strippedPath}${path}`, {
       method,
       headers: {
         "Content-Type": "application/json",
@@ -21,7 +68,7 @@ const HTTPRepl = ({ paths }: Props) => {
       body: method !== "GET" ? JSON.stringify(input) : undefined,
     });
 
-    setOutput(await response.text());
+    setOutput(response);
   };
 
   return (
@@ -46,6 +93,16 @@ const HTTPRepl = ({ paths }: Props) => {
             </option>
           ))}
         </select>
+        {selectedPath.endsWith("...") && (
+          <>
+            <div className="font-bold flex items-center">Path</div>
+            <input
+              value={path}
+              onChange={({ target: { value } }) => setPath(value)}
+              className="font-mono text-lg border-slate-600 border-2 px-2 rounded-md bg-slate-700"
+            />
+          </>
+        )}
         <button
           onClick={handleSubmit}
           className="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded"
@@ -61,7 +118,7 @@ const HTTPRepl = ({ paths }: Props) => {
           language="rust"
         />
       </div>
-      <code className="p-2 font-mono text-sm">{output}</code>
+      {output && <Response response={output} />}
     </div>
   );
 };

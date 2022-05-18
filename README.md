@@ -20,6 +20,7 @@ Just `cd` into your Spin app, run it with `spin up` and run `laundromat` in a se
 
 ## How to build
 
-1. `yarn build`
-2. `cd server && cargo build --release`
-3. `mv ./target/release/laundromat /usr/local/bin`
+1. `npm i`
+1. `npm build`
+1. `cd server && cargo build --release`
+1. `mv ./target/release/laundromat /usr/local/bin`

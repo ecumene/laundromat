@@ -31,10 +31,10 @@ async fn main() {
     ));
 
     let routes = static_files
-        .or(this_dir)
-        .or(proxy)
+        .or(static_assets)
         .or(logs_dir)
-        .or(static_assets);
+        .or(this_dir)
+        .or(proxy);
 
     println!("Listening on http://localhost:3117");
 
