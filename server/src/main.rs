@@ -7,7 +7,6 @@ use warp::Filter;
 use warp_reverse_proxy::reverse_proxy_filter;
 
 const SPIN_HOME: &str = ".spin";
-const THIS_DIR: &str = "./";
 
 #[tokio::main]
 async fn main() {
@@ -20,10 +19,12 @@ async fn main() {
         .map(|home| home.join(SPIN_HOME))
         .expect("Could not find home directory");
 
+    let current_dir = std::env::current_dir().expect("Could not get current directory");
+
     // .spin/*
     let logs_dir = warp::path("spin").and(warp::fs::dir(spin_logs_dir));
     // ./*
-    let this_dir = warp::path("app").and(warp::fs::dir(THIS_DIR));
+    let this_dir = warp::path("app").and(warp::fs::dir(current_dir));
     // http://127.0.0.1:3000/*
     let proxy = warp::path!("proxy" / ..).and(reverse_proxy_filter(
         "proxy".to_string(),

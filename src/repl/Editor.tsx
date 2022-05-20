@@ -7,7 +7,7 @@ type MonacoEditorProps = {
   initialContents?: string;
   setContents: React.Dispatch<React.SetStateAction<string>>;
   language: string;
-  disabled: boolean;
+  disabled?: boolean;
 };
 
 const MonacoEditor: FunctionComponent<MonacoEditorProps> = ({
