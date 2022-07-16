@@ -108,7 +108,7 @@ const HTTPRepl = ({ paths }: Props) => {
   const [selectedPath, setSelectedPath] = useState(paths[0]);
   const [method, setMethod] = useState("GET");
   // todo
-  const [headers, setHeaders] = useState<[string, string][]>([]);
+  const [headers, setHeaders] = useState<[string, string][]>([["Content-Type", "application/json"]]);
   const [path, setPath] = useState<string>("");
 
   const handleSubmit = async () => {
@@ -116,11 +116,8 @@ const HTTPRepl = ({ paths }: Props) => {
     const strippedPath = selectedPath.replace(/\.\.\./, "");
     const response = await fetch(`/proxy${strippedPath}${path}`, {
       method,
-      headers: {
-        "Content-Type": "application/json",
-        ...Object.fromEntries(headers),
-      },
-      body: method !== "GET" ? JSON.stringify(input) : undefined,
+      headers: Object.fromEntries(headers),
+      body: method !== "GET" ? input : undefined,
     });
 
     setOutput(response);
